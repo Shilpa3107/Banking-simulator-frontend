@@ -69,3 +69,40 @@ function withdraw(){
 
 }
 
+function transfer(){
+    const data = {
+        fromAcc : document.getElementById("t-from").value,
+        toAcc : document.getElementById("t-to").value,
+        amount : document.getElementById("t-amount").value
+    };
+
+    fetch(BASE_URL+"/transactions/transfer" ,{
+        method : "POST",
+        headers : {
+            "Content-Type" : "application/json"
+        },
+        body : JSON.stringify(data)
+    })
+    .then(res => res.text())
+    .then(msg => {
+        document.getElementById("withdraw-result").innerText = msg;
+    });
+}
+
+function viewAccount(){
+    const acc= document.getElementById("v-acc").value;
+
+    fetch(BASE_URL+"/accounts/"+acc)
+    .then(res=>res.json())
+    .then(data =>{
+        document.getElementById("view-result").innerText = JSON.stringify(data);
+    });
+}
+
+function listAccount(){
+    fetch(BASE_URL+"/accounts/all")
+    .then(res =>res.json())
+    .then(data =>{
+        document.getElementById("list-result").innerText=JSON.stringify(data);
+    });
+}
