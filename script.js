@@ -10,8 +10,8 @@ function showSection(id){
 function createAccount(){
     const data = {
         name : document.getElementById("c-name").value,
-        email : documnet.getElementById("c-email").value,
-        balance : documnet.getElementById("c-balance").value
+        email : document.getElementById("c-email").value,
+        balance : document.getElementById("c-balance").value
     };
 
     fetch(BASE_URL+"/accounts/create" ,{
@@ -24,6 +24,8 @@ function createAccount(){
     .then(res => res.json())
     .then(result => {
         document.getElementById("create-result").innerText = "Account is Created and here is your Account Number "+result.accountNumber;
+        console.log("Account is created successfully..!");
+        
     });
     
 
@@ -45,8 +47,9 @@ function deposite(){
     .then(res => res.text())
     .then(msg => {
         document.getElementById("deposite-result").innerText = msg;
+        console.log("Amount is deposited successfully..!");
     });
-
+    
 }
 
 function withdraw(){
@@ -54,7 +57,7 @@ function withdraw(){
         accNo : document.getElementById("w-acc").value,
         amount : document.getElementById("w-amount").value
     };
-
+    
     fetch(BASE_URL+"/transactions/withdraw" ,{
         method : "POST",
         headers : {
@@ -65,8 +68,9 @@ function withdraw(){
     .then(res => res.text())
     .then(msg => {
         document.getElementById("withdraw-result").innerText = msg;
+        console.log("Amount is withdraw successfully..!");
     });
-
+    
 }
 
 function transfer(){
@@ -74,9 +78,9 @@ function transfer(){
         fromAcc : document.getElementById("t-from").value,
         toAcc : document.getElementById("t-to").value,
         amount : document.getElementById("t-amount").value
-    };
-
-    fetch(BASE_URL+"/transactions/transfer" ,{
+    }
+    
+    fetch(BASE_URL+"/transactions/transfer",{
         method : "POST",
         headers : {
             "Content-Type" : "application/json"
@@ -85,24 +89,25 @@ function transfer(){
     })
     .then(res => res.text())
     .then(msg => {
-        document.getElementById("withdraw-result").innerText = msg;
+        document.getElementById("trasfer-result").innerText = msg;
+        console.log("Amount is Transfer successfully..!");
     });
 }
 
 function viewAccount(){
-    const acc= document.getElementById("v-acc").value;
+    const acc = document.getElementById("v-acc").value;
 
     fetch(BASE_URL+"/accounts/"+acc)
-    .then(res=>res.json())
-    .then(data =>{
+    .then(res => res.json())
+    .then(data => {
         document.getElementById("view-result").innerText = JSON.stringify(data);
     });
 }
 
 function listAccount(){
     fetch(BASE_URL+"/accounts/all")
-    .then(res =>res.json())
-    .then(data =>{
-        document.getElementById("list-result").innerText=JSON.stringify(data);
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById("list-result").innerText = JSON.stringify(data);
     });
 }
