@@ -1,72 +1,166 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Banking Simulator</title>
+    <title>BankSim | Modern Banking Simulator</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
+
 <body>
-    <h1>Welcome to our Banking Application</h1>
-    <div class = "button-container">
-        <button onclick="showSection('create')">Create Account</button>
-        <button onclick="showSection('deposite')">Deposite</button>
-        <button onclick="showSection('withdraw')">Withdraw</button>
-        <button onclick="showSection('transfer')">Transfer</button>
-        <button onclick="showSection('view')">View Account</button>
-        <button onclick="showSection('list')">View All Account</button>
-    </div>
+    <div class="container">
+        <h1>Banking Simulator</h1>
 
-    <hr>
+        <!-- Top Status Bar (Logged in only) -->
+        <div id="user-bar" class="auth-required">
+            <div id="user-welcome">
+                Welcome back, <span id="display-name" style="font-weight: 700; color: var(--primary);">User</span>
+            </div>
+            <div class="balance-badge">
+                Balance: $<span id="display-balance">0.00</span>
+            </div>
+        </div>
 
-    <div id = "create" class="section">
-        <h2>Create Account</h2>
-        <input id = "c-name" placeholder="Enter name"><br><br>
-        <input id = "c-email" placeholder="Enter Email"><br><br>
-        <input id = "c-balance" placeholder="Enter Openingbalance"><br><br>
-        <button onclick="createAccount()">Submit</button>
-        <p id="create-result"></p>
-    </div>
+        <!-- Authentication Navigation -->
+        <div id="auth-nav">
+            <button id="nav-login-btn" onclick="showSection('login')">Login</button>
+            <button id="nav-signup-btn" onclick="showSection('signup')">Create Account</button>
+            <button id="logout-btn" style="display:none;" onclick="logout()">Logout</button>
+        </div>
 
-    <div id="deposite" class="section">
-        <h2>Deposite Money</h2>
-        <input id="d-acc" placeholder="Account Number"><br><br>
-        <input id="d-amount" placeholder="Amount"><br><br>
-        <button onclick="deposite()">Submit</button>
-        <p id="deposite-result"></p>
-    </div>
+        <!-- Main App Navigation (Hidden until login) -->
+        <div id="main-nav" class="auth-required">
+            <button onclick="showSection('deposite')">Deposit</button>
+            <button onclick="showSection('withdraw')">Withdraw</button>
+            <button onclick="showSection('transfer')">Transfer</button>
+            <button onclick="showSection('view')">My Account</button>
+            <button onclick="showSection('list')">All Accounts</button>
+        </div>
 
-    <div id="withdraw" class="section">
-        <h2>Withdraw Money</h2>
-        <input id="w-acc" placeholder="Account Number"><br><br>
-        <input id="w-amount" placeholder="Amount"><br><br>
-        <button onclick="withdraw()">Submit</button>
-        <p id="withdraw-result"></p>
-    </div>
-    
-    <div id = "transfer" class="section">
-        <h2>Transfer Money</h2>
-        <input id = "t-from" placeholder="Sender Account"><br><br>
-        <input id = "t-to" placeholder="Receiver Account"><br><br>
-        <input id = "t-amount" placeholder="Amount"><br><br>
-        <button onclick="transfer()">Submit</button>
-        <p id="trasfer-result"></p>
-    </div>
-    
-    <div id="view" class="section">
-        <h2>View Account Details</h2>
-        <input id= "v-acc" placeholder="Account Number"><br><br>
-        <button onclick="viewAccount()">Submit</button>
-        <pre id="view-result"></pre>
-    </div>
+        <!-- Login Section -->
+        <div id="login" class="section" style="display:block;">
+            <h2>Secure Login</h2>
+            <div class="form-group">
+                <label>Identifier</label>
+                <input id="l-id" placeholder="Account Number or Email">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input id="l-pass" type="password" placeholder="••••••••">
+            </div>
+            <button class="primary" style="width: 100%; justify-content: center;" onclick="login()">Login to
+                Account</button>
+            <p id="login-result" class="result"></p>
+        </div>
 
-    <div id="list" class="section">
-        <h2>All Accounts</h2>
-        <button onclik="listAccount()">Load Accounts</button>
-        <pre id="list-result"></pre>
+        <!-- Signup Section -->
+        <div id="signup" class="section">
+            <h2>Create Account</h2>
+            <div class="form-group">
+                <label>Full Name</label>
+                <input id="c-name" placeholder="John Doe">
+            </div>
+            <div class="form-group">
+                <label>Email Address</label>
+                <input id="c-email" placeholder="john@example.com">
+            </div>
+            <div class="form-group">
+                <label>Initial Balance</label>
+                <input id="c-balance" type="number" placeholder="500.00">
+            </div>
+            <div class="form-group">
+                <label>Set Password</label>
+                <input id="c-pass" type="password" placeholder="••••••••">
+            </div>
+            <button class="primary" style="width: 100%; justify-content: center;" onclick="createAccount()">Register
+                Now</button>
+            <p id="create-result" class="result"></p>
+        </div>
+
+        <!-- Deposit Section -->
+        <div id="deposite" class="section">
+            <h2>Deposit Money</h2>
+            <div class="form-group">
+                <label>Account Number</label>
+                <input id="d-acc" readonly>
+            </div>
+            <div class="form-group">
+                <label>Amount to Deposit</label>
+                <input id="d-amount" type="number" placeholder="0.00">
+            </div>
+            <button class="primary" style="width: 100%; justify-content: center;" onclick="deposite()">Confirm
+                Deposit</button>
+            <p id="deposite-result" class="result"></p>
+        </div>
+
+        <!-- Withdraw Section -->
+        <div id="withdraw" class="section">
+            <h2>Withdraw Funds</h2>
+            <div class="form-group">
+                <label>Account Number</label>
+                <input id="w-acc" readonly>
+            </div>
+            <div class="form-group">
+                <label>Amount to Withdraw</label>
+                <input id="w-amount" type="number" placeholder="0.00">
+            </div>
+            <button class="primary" style="width: 100%; justify-content: center;" onclick="withdraw()">Confirm
+                Withdrawal</button>
+            <p id="withdraw-result" class="result"></p>
+        </div>
+
+        <!-- Transfer Section -->
+        <div id="transfer" class="section">
+            <h2>Inter-account Transfer</h2>
+            <div class="form-group">
+                <label>From Account</label>
+                <input id="t-from" readonly>
+            </div>
+            <div class="form-group">
+                <label>Recipient Account Number</label>
+                <input id="t-to" placeholder="Recipient Acc #">
+            </div>
+            <div class="form-group">
+                <label>Transfer Amount</label>
+                <input id="t-amount" type="number" placeholder="0.00">
+            </div>
+            <button class="primary" style="width: 100%; justify-content: center;" onclick="transfer()">Send
+                Money</button>
+            <p id="trasfer-result" class="result"></p>
+        </div>
+
+        <!-- View Section -->
+        <div id="view" class="section">
+            <h2>Account Details</h2>
+            <div id="account-card-container">
+                <!-- Profile card will be injected here -->
+                <div class="account-card">
+                    <div><span class="label">Choose Account:</span></div>
+                    <input id="v-acc" placeholder="Acc #">
+                    <button class="primary" style="margin-top:10px; width:100%; justify-content: center;"
+                        onclick="viewAccount()">Fetch Details</button>
+                </div>
+            </div>
+            <div id="view-result-styled" style="margin-top: 20px;"></div>
+        </div>
+
+        <!-- List Section -->
+        <div id="list" class="section">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h2 style="margin:0;">System Accounts</h2>
+                <button onclick="listAccount()">Refresh</button>
+            </div>
+            <div id="list-container">
+                <p class="text-muted">Click refresh to load system-wide accounts.</p>
+            </div>
+        </div>
     </div>
 
     <script src="script.js"></script>
-    
 </body>
+
 </html>
